@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Validated
 @Getter
@@ -18,7 +19,7 @@ public class OrderId implements Serializable {
     private String uuid;
 
     @Column(name = "orderid", nullable = false)
-    private Number id;
+    private BigDecimal id;
 
 
 }

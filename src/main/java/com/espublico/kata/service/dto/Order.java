@@ -19,11 +19,11 @@ public class Order {
     private String date;
     private String ship_date;
     private Integer units_sold;
-    private Number unit_price;
-    private Number unit_cost;
-    private Number total_revenue;
-    private Number total_cost;
-    private Number total_profit;
+    private Double unit_price;
+    private Double unit_cost;
+    private Double total_revenue;
+    private Double total_cost;
+    private Double total_profit;
     private Link links;
 
 

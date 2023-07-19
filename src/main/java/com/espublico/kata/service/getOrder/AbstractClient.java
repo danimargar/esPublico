@@ -12,6 +12,7 @@ public abstract class AbstractClient {
     protected final  RestTemplate restTemplate;
 
     protected AbstractClient(RestTemplate restTemplate) {
+
         this.restTemplate = restTemplate;
     }
 

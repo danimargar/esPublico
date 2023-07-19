@@ -1,13 +1,17 @@
 package com.espublico.kata.service.saveOrder.impl;
 
+import com.espublico.kata.controller.OrderController;
 import com.espublico.kata.model.OrderEntity;
 import com.espublico.kata.model.OrderId;
 import com.espublico.kata.repository.OrderRepository;
 import com.espublico.kata.service.dto.Order;
 import com.espublico.kata.service.dto.PageOrder;
 import com.espublico.kata.service.saveOrder.SaveOrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,6 +21,8 @@ import java.util.List;
 @Service
 public class SaveOrderServiceImpl implements SaveOrderService {
 
+    private static final Logger logger = LoggerFactory.getLogger(SaveOrderServiceImpl.class);
+
     private final OrderRepository orderRepository;
 
     public SaveOrderServiceImpl(OrderRepository orderRepository) {
@@ -25,14 +31,14 @@ public class SaveOrderServiceImpl implements SaveOrderService {
 
 
     @Override
-    public Number saveOrder(PageOrder pageOrder) {
-
+    public Number saveOrder(PageOrder pageOrder) throws Exception {
+        logger.info("SaveOrderServiceImpl");
         List<OrderEntity> listOrders = new ArrayList<>();
         for (Order order: pageOrder.getContent()) {
             OrderEntity orderEntity = new OrderEntity();
             OrderId orderId = new OrderId();
             orderId.setUuid(order.getUuid());
-            orderId.setId(Long.valueOf(order.getId()));
+            orderId.setId(BigDecimal.valueOf(order.getId()));
             orderEntity.setId(orderId);
             orderEntity.setRegion(order.getRegion());
             orderEntity.setCountry(order.getCountry());
@@ -41,21 +47,34 @@ public class SaveOrderServiceImpl implements SaveOrderService {
             orderEntity.setPriority(order.getPriority());
             orderEntity.setOrder_date(order.getDate() != null ? dateFromString(order.getDate()) : null);
             orderEntity.setShip_date(order.getShip_date() != null ? dateFromString(order.getShip_date()) : null);
-            orderEntity.setUnits_sold(order.getUnits_sold());
-            orderEntity.setUnit_price(order.getUnit_price());
-            orderEntity.setUnit_cost(order.getUnit_cost());
-            orderEntity.setTotal_revenue(order.getTotal_revenue());
-            orderEntity.setTotal_cost(order.getTotal_cost());
-            orderEntity.setTotal_profit(order.getTotal_profit());
+            orderEntity.setUnits_sold(BigDecimal.valueOf(order.getUnits_sold()));
+            orderEntity.setUnit_price(BigDecimal.valueOf(order.getUnit_price()));
+            orderEntity.setUnit_cost(BigDecimal.valueOf(order.getUnit_cost()));
+            orderEntity.setTotal_revenue(BigDecimal.valueOf(order.getTotal_revenue()));
+            orderEntity.setTotal_cost(BigDecimal.valueOf(order.getTotal_cost()));
+            orderEntity.setTotal_profit(BigDecimal.valueOf(order.getTotal_profit()));
 
             listOrders.add(orderEntity);
         }
-        List<OrderEntity>listResponse = null;
-        try{
-            listResponse = orderRepository.saveAllAndFlush(listOrders);
 
-        } catch(Exception e) {
-            System.out.println(e.getMessage());
+        String exception = "";
+        List<OrderEntity>listResponse = null;
+        int numIntentos = 0;
+        while (listResponse == null && numIntentos < 3) {
+            numIntentos++;
+            try{
+                logger.info("SaveOrderServiceImpl::Llamada");
+                listResponse = orderRepository.saveAllAndFlush(listOrders);
+
+            } catch(Exception e) {
+                logger.error(e.getMessage());
+                exception = e.getMessage();
+            }
+        }
+        logger.info("SaveOrderServiceImpl::respuesta");
+        if (listResponse == null) {
+            throw new Exception(exception);
+
         }
         return listResponse.size();
     }

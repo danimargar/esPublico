@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
@@ -33,16 +34,16 @@ public class OrderEntity {
     @Column(name = "ship_date")
     private Date ship_date;
     @Column(name = "units_sold")
-    private Number units_sold;
+    private BigDecimal units_sold;
     @Column(name = "unit_price")
-    private Number unit_price;
+    private BigDecimal unit_price;
     @Column(name = "unit_cost")
-    private Number unit_cost;
+    private BigDecimal unit_cost;
     @Column(name = "total_revenue")
-    private Number total_revenue;
+    private BigDecimal total_revenue;
     @Column(name = "total_cost")
-    private Number total_cost;
+    private BigDecimal total_cost;
     @Column(name = "total_profit")
-    private Number total_profit;
+    private BigDecimal total_profit;
 
 }
