@@ -2,6 +2,7 @@ package com.espublico.kata.controller;
 
 import com.espublico.kata.service.getOrder.GetOrderService;
 import com.espublico.kata.service.dto.PageOrder;
+import com.espublico.kata.service.saveOrder.SaveOrderService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +21,12 @@ public class OrderController {
 
     private final GetOrderService getOrderService;
 
+    private final SaveOrderService saveOrderService;
 
-    public OrderController(GetOrderService getOrderService) {
+
+    public OrderController(GetOrderService getOrderService, SaveOrderService saveOrderService) {
         this.getOrderService = getOrderService;
+        this.saveOrderService = saveOrderService;
     }
 
     @GetMapping
@@ -36,6 +40,7 @@ public class OrderController {
             PageOrder pageOrder = getOrderService.getOrder(link, page, maxPerPage);
 
             /** 2. Se carga en BD la lista obtenida*/
+            Number OrderSaves = saveOrderService.saveOrder(pageOrder);
 
             /** 3. Se comprueba si existen más páginas de pedidos*/
             if (pageOrder.getLinks().getNext() == null) {
