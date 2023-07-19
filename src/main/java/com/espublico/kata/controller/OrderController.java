@@ -1,5 +1,7 @@
 package com.espublico.kata.controller;
 
+import com.espublico.kata.service.dto.ResponseOrder;
+import com.espublico.kata.service.getInfoFromBD.GetInfoFromBDService;
 import com.espublico.kata.service.getOrder.GetOrderService;
 import com.espublico.kata.service.dto.PageOrder;
 import com.espublico.kata.service.saveOrder.SaveOrderService;
@@ -27,39 +29,43 @@ public class OrderController {
     private final GetOrderService getOrderService;
 
     private final SaveOrderService saveOrderService;
+    private final GetInfoFromBDService getInfoFromBDService;
 
 
-    public OrderController(GetOrderService getOrderService, SaveOrderService saveOrderService) {
+    public OrderController(GetOrderService getOrderService, SaveOrderService saveOrderService, GetInfoFromBDService getInfoFromBDService) {
         this.getOrderService = getOrderService;
         this.saveOrderService = saveOrderService;
+        this.getInfoFromBDService = getInfoFromBDService;
     }
 
     @GetMapping
-    public ResponseEntity<Object> managementOrder () {
+    public ResponseEntity<ResponseOrder> managementOrder () {
         int iteracion = 1;
         String link = null;
         boolean nextLink = true;
+        ResponseOrder response = null;
+
         logger.info("OrderController******************Comienzo controlador************************");
-        while(nextLink) {
+        /*while(nextLink) {
 
             logger.info("OrderController******************Comienza Iteración: " + iteracion);
-            /** 1. Se obtiene la lista de pedidos*/
+            *//** 1. Se obtiene la lista de pedidos*//*
             PageOrder pageOrder = null;
             try {
                 pageOrder = getOrderService.getOrder(link, page, maxPerPage);
             } catch (Exception e) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
-            /** 2. Se carga en BD la lista obtenida*/
+            *//** 2. Se carga en BD la lista obtenida*//*
             Number OrderSaves = null;
             try {
                 OrderSaves = saveOrderService.saveOrder(pageOrder);
             } catch (Exception e) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
-            /** 3. Se comprueba si existen más páginas de pedidos*/
+            *//** 3. Se comprueba si existen más páginas de pedidos*//*
             if (pageOrder.getLinks().getNext() == null) {
                 //Se ha finalizado el proceso de descarga-carga de pedidos desde servidor a BD
                 nextLink = false;
@@ -68,13 +74,14 @@ public class OrderController {
                 link = pageOrder.getLinks().getNext();
             }
             iteracion++;
-        }
+        }*/
         logger.info("OrderController::finaliza proceso de carga en BD");
         /** 3. Se recuperan los resultados obtenidos*/
+        response = getInfoFromBDService.getInfo();
 
         /** 4. Se vuelca la información en fichero*/
 
-        return null;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

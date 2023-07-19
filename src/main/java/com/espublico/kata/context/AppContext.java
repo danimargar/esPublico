@@ -14,10 +14,6 @@ public class AppContext {
 
     @Bean
     RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setObjectMapper(new ObjectMapper());
-        restTemplate.getMessageConverters().add(converter);
 
         RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
         return restTemplateBuilder.setConnectTimeout(Duration.ofSeconds(30)).
