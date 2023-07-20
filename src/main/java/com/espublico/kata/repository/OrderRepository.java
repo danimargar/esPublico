@@ -2,6 +2,7 @@ package com.espublico.kata.repository;
 
 import com.espublico.kata.model.OrderEntity;
 import com.espublico.kata.model.OrderId;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -19,4 +20,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, OrderId> {
     List<Object[]> totalSalesChannel();
     @Query(value = "select priority, count(*) as total from tde_order group by priority order by total desc", nativeQuery = true)
     List<Object[]> totalPriority();
+    @Query(value = "select * from tde_order order by orderid desc LIMIT :since,:numRow", nativeQuery = true)
+    List<OrderEntity> findAllByOrderByName(int since, int numRow);
 }

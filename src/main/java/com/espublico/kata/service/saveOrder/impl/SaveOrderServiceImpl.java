@@ -1,6 +1,5 @@
 package com.espublico.kata.service.saveOrder.impl;
 
-import com.espublico.kata.controller.OrderController;
 import com.espublico.kata.model.OrderEntity;
 import com.espublico.kata.model.OrderId;
 import com.espublico.kata.repository.OrderRepository;
