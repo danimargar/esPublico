@@ -46,37 +46,42 @@ public class OrderController {
         ResponseOrder response = null;
 
         logger.info("OrderController******************Comienzo controlador************************");
-        /*while(nextLink) {
+        if (saveOrderService.isEmpty()) {
+            while(nextLink) {
 
-            logger.info("OrderController******************Comienza Iteración: " + iteracion);
-            *//** 1. Se obtiene la lista de pedidos*//*
-            PageOrder pageOrder = null;
-            try {
-                pageOrder = getOrderService.getOrder(link, page, maxPerPage);
-            } catch (Exception e) {
-                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+                logger.info("OrderController******************Comienza Iteración: " + iteracion);
+                /** 1. Se obtiene la lista de pedidos*/
+                PageOrder pageOrder = null;
+                try {
+                    pageOrder = getOrderService.getOrder(link, page, maxPerPage);
+                } catch (Exception e) {
+                    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
 
-            *//** 2. Se carga en BD la lista obtenida*//*
-            Number OrderSaves = null;
-            try {
-                OrderSaves = saveOrderService.saveOrder(pageOrder);
-            } catch (Exception e) {
-                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+                /** 2. Se carga en BD la lista obtenida*/
+                Number OrderSaves = null;
+                try {
+                    OrderSaves = saveOrderService.saveOrder(pageOrder);
+                } catch (Exception e) {
+                    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
 
-            *//** 3. Se comprueba si existen más páginas de pedidos*//*
-            if (pageOrder.getLinks().getNext() == null) {
-                //Se ha finalizado el proceso de descarga-carga de pedidos desde servidor a BD
-                nextLink = false;
-            } else{
-                //Se carga el enlace a la siguiente página
-                link = pageOrder.getLinks().getNext();
+                /** 3. Se comprueba si existen más páginas de pedidos*/
+                if (pageOrder.getLinks().getNext() == null) {
+                    //Se ha finalizado el proceso de descarga-carga de pedidos desde servidor a BD
+                    nextLink = false;
+                } else{
+                    //Se carga el enlace a la siguiente página
+                    link = pageOrder.getLinks().getNext();
+                }
+                iteracion++;
             }
-            iteracion++;
-        }*/
+        } else {
+            logger.info("OrderController::La base de datos está cargada, no es necesario volverlo a hacer");
+        }
+
         logger.info("OrderController::finaliza proceso de carga en BD");
-        /** 3. Se recuperan los resultados obtenidos*/
+        /** 3. Se recuperan los resultados obtenidos desde BD y se incorporan al objeto de respuesta*/
         response = getInfoFromBDService.getInfo();
 
         /** 4. Se vuelca la información en fichero*/

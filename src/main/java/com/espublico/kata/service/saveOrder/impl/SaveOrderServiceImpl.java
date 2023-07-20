@@ -32,7 +32,7 @@ public class SaveOrderServiceImpl implements SaveOrderService {
 
     @Override
     public Number saveOrder(PageOrder pageOrder) throws Exception {
-        logger.info("SaveOrderServiceImpl");
+        logger.info("SaveOrderServiceImpl.saveOrder");
         List<OrderEntity> listOrders = new ArrayList<>();
         for (Order order: pageOrder.getContent()) {
             OrderEntity orderEntity = new OrderEntity();
@@ -63,7 +63,7 @@ public class SaveOrderServiceImpl implements SaveOrderService {
         while (listResponse == null && numIntentos < 3) {
             numIntentos++;
             try{
-                logger.info("SaveOrderServiceImpl::Llamada");
+                logger.info("SaveOrderServiceImpl.saveOrder::Llamada");
                 listResponse = orderRepository.saveAllAndFlush(listOrders);
 
             } catch(Exception e) {
@@ -71,13 +71,23 @@ public class SaveOrderServiceImpl implements SaveOrderService {
                 exception = e.getMessage();
             }
         }
-        logger.info("SaveOrderServiceImpl::respuesta");
+        logger.info("SaveOrderServiceImpl.saveOrder::respuesta");
         if (listResponse == null) {
             throw new Exception(exception);
 
         }
         return listResponse.size();
     }
+
+
+
+
+    @Override
+    public Boolean isEmpty() {
+        return orderRepository.count() == 0;
+    }
+
+
 
     private Date dateFromString(String date) {
         try{

@@ -5,4 +5,5 @@ import com.espublico.kata.service.dto.PageOrder;
 public interface SaveOrderService {
 
     Number saveOrder(PageOrder pageOrder) throws Exception;
+    Boolean isEmpty();
 }
