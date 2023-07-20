@@ -41,7 +41,9 @@ public class CreateCSVServiceImpl implements CreateCSVService {
         String[] headers = {"Order ID", "Order Priority", "Order Date", "Region", "Country", "Item Type", "Sales Channel", "Ship Date", "Units Sold", "Unit Price", "Unit Cost", "Total Revenue", "Total Cost", "Total Profit"};
         writer.writeNext(headers);
         int contador = 0;
-        while (listOrderEntity != null) {
+        boolean firsTime = true;
+        while (listOrderEntity.size() > 0 || firsTime) {
+            firsTime = false;
             try{
                 logger.info("iteración::" + contador);
                 logger.info("CreateCSVServiceImpl::Llamada");
@@ -50,7 +52,7 @@ public class CreateCSVServiceImpl implements CreateCSVService {
                 //Volcado en fichero
                 List<String[]> listAr = setListArray(listOrderEntity);
                 writer.writeAll((listAr));
-
+                writer.flush();
             } catch(Exception e) {
                 logger.error(e.getMessage());
                 exception = e.getMessage();

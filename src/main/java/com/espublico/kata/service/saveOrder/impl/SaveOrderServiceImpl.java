@@ -90,7 +90,7 @@ public class SaveOrderServiceImpl implements SaveOrderService {
 
     private Date dateFromString(String date) {
         try{
-            return new SimpleDateFormat("dd/MM/yyyy").parse(date);
+            return new SimpleDateFormat("MM/dd/yyyy").parse(date);
 
         } catch (ParseException e) {
             throw new RuntimeException(e);
